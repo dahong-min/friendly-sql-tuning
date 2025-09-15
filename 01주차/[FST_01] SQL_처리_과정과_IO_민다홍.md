@@ -268,12 +268,9 @@ BCHR = (캐시에서 곧바로 찾은 블록 수 / 총 읽은 블록 수) × 100
 
 1장.
 > 논리적I/O를 줄여야한다.
-
->>>
-인덱스에 대한 맹신을 버려야 한다는 점이 제일 인상적이었다.
-쿼리가 느리면 무조건 인덱스를 추가를 생각했던 접근 방식을 반성하게 됐다.
-
-간단하게 테스트를 진행해봤는데 시간이 있다면 조금 더 테스트를 조금 해보고 싶다.
+위의 문장이 1장에서 강조하고 있는 주제 인 것같다.
+쿼리가 느리면 인덱스 생성을 먼저 생각했던 접근 방식을 반성하게 됐다.
+간단하게 테스트를 진행해봤는데 시간이 있다면 조금 더 다르게 테스트를 조금 해보고 싶다.
 
 ```
 -- 1. 샘플 테이블 생성
@@ -337,8 +334,8 @@ SELECT CONCAT('Index Scan Time: ', ROUND(@end_time - @start_time, 3), ' seconds'
 -- Index Scan Time: 0.084 seconds seconds
 
 
-SELECT * FROM LARGE_TABLE WHERE STATUS = 'ACTIVE'; > 커버링 인덱스를 타지 않아서 차이 남 
-Full Scan Time: 2.737 seconds | Index Scan Time: 3.565 seconds 차이
+SELECT * FROM LARGE_TABLE WHERE STATUS = 'ACTIVE'; 
+Full Scan 이 Index Scan 보다 빠름 > 커버링 인덱스를 타지 않아서 차이 남 
 
 
 ```

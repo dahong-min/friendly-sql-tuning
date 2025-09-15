@@ -2,6 +2,9 @@
 
 ## 1.1 SQL 파싱과 최적화
 
+- 학습 목표
+  - 옵티마이저가 SQL을 처리하는 과정
+
 ### 1.1.1 구조적,집합적,선언적 질의 언어
 
 - 데이터 준비
@@ -216,9 +219,42 @@ SELECT /*+ LEADING(A) USE_NL(B) INDEX(A (주문일자)) INDEX(B 고객_PK) */
 
 ## 1.2 SQL 공유 및 재사용
 
+- 학습 목표
+  - 소프트 파싱과 하드 파싱의 차이점
+  - 바인드 변수의 중요성
+
 ### 1.2.1 소프트 파싱 vs. 하드 파싱
 
+- SGA(System Global Area)
+  - 데이터와 제어 구조를 캐싱하는 메모리 공간
+  - ![](images/SGA.png)
+- 사용자가 SQL문을 전달하면 DBMS는 SQL을 파싱한 후 `라이브러리 캐시`에 존재 확인
+- 소프트 파싱
+  - 라이브러리 캐시에서 찾아 곧바로 실행단계로 넘어가는 것
+- 하드 파싱
+  - 라이브러리 캐시에서 찾는 것을 실패해 최적화 및 로우 소스 생성 단계까지 모두 거치는 것
+
 ### 1.2.2 바인드 변수의 중요성
+
+- 전체 SQL 텍스트가 이름 역할
+  - 텍스트 중 일부가 수정되면 그 순간 다른 객체로 인식
+  - 바인드 변수를 사용 안 할 경우 과도한 I/O 발생
+- 바인드 변수
+  - 파라미터 Driven 방식으로 SQL을 작성하는 방법
+
+```
+public void login(String loginId) {
+    String sqlStmt = "SELECT * FROM CUSTOMER WHERE LOGIN_ID=?";
+    PreparedStatement st = con.prepareStatement(sqlStmt);;
+    st.setString(1, loginId);
+    ResultSet rs = st.executeQuery();
+    if(rs.next()) {
+        // do anything
+    }
+    rs.close();
+    st.close();
+}
+```
 
 ## 1.3 데이터 저장 구조 및 I/O 메커니즘
 

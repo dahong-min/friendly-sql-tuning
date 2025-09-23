@@ -64,26 +64,26 @@
   2. 숫자로 변환할 수 없는 문자열 입력 시 에러발생
   3. 기능에 의존 X 인덱스 컬럼 기준으로 반대편 컬럼 또는 값을 명확히 형변환해 주어야 함
 
-## 2.3 인덱스 확장기능 사용법
+## 2.3 인덱스 확장기능 사용법  
 ### 2.3.1 Index Range Scan
-- 인덱스 루트에서 리프 블록까지 수직적 탐색 후 필요한 범위만 스캔
-<img width="412" height="197" alt="image" src="https://github.com/user-attachments/assets/a8595d91-54b0-4b64-b7fa-ccecbded07ee" />
-=> 성능은 인덱스 스캔 범위, 테이블 액세스 횟수 얼마나 줄일 수 있느냐로 결정
-### 2.3.2 Index Full Scan
-- 인덱스 리프블록 모두 탐색
-<img width="405" height="192" alt="image" src="https://github.com/user-attachments/assets/749e1d67-e2ca-4051-9c46-c510d6c88cef" />
-- 인덱스 컬럼 순으로 정렬되므로 Sort Order By 연산 생략 목적으로 사용 가능 
-### 2.3.3 Index Unique Scan
-- 수직적 탐색만으로 데이터 찾는 스캔 방식 => 인덱스를 "=" 조건으로 탐색하는 경우에 작동
-<img width="363" height="177" alt="image" src="https://github.com/user-attachments/assets/b3759552-2f51-46c1-bc1c-5091bb33e897" />
-### 2.3.4 Index Skip Scan
-- 인덱스 선두 컬럼이 조건절에 없어도 인덱스를 활용하는 새로운 스캔 방식
-- 인덱스 선두 컬럼의 Distinct Value 개수가 적고, 후행 컬럼 Distinct Value 개수가 많을 때 유용
-<img width="361" height="176" alt="image" src="https://github.com/user-attachments/assets/5b4c04b9-90f0-44c4-8da8-8a74e8be5f0c" />
-### 2.3.5 Index Fast Full Scan
-- 논리적인 인덱스 트리 구조를 무시하고 인덱스 세그먼트 전체를 Multiblock I/O 방식으로 스캔
-- 디스크로부터 대량의 인덱스 블록을 읽어야 할 때 효과적
-### 2.3.6 Index Range Scan Descending
+- 인덱스 루트에서 리프 블록까지 수직적 탐색 후 필요한 범위만 스캔  
+- <img width="412" height="197" alt="image" src="https://github.com/user-attachments/assets/a8595d91-54b0-4b64-b7fa-ccecbded07ee" /> 
+=> 성능은 인덱스 스캔 범위, 테이블 액세스 횟수 얼마나 줄일 수 있느냐로 결정  
+### 2.3.2 Index Full Scan  
+- 인덱스 리프블록 모두 탐색  
+- <img width="405" height="192" alt="image" src="https://github.com/user-attachments/assets/749e1d67-e2ca-4051-9c46-c510d6c88cef" />  
+- 인덱스 컬럼 순으로 정렬되므로 Sort Order By 연산 생략 목적으로 사용 가능   
+### 2.3.3 Index Unique Scan  
+- 수직적 탐색만으로 데이터 찾는 스캔 방식 => 인덱스를 "=" 조건으로 탐색하는 경우에 작동  
+- <img width="363" height="177" alt="image" src="https://github.com/user-attachments/assets/b3759552-2f51-46c1-bc1c-5091bb33e897" />  
+### 2.3.4 Index Skip Scan  
+- 인덱스 선두 컬럼이 조건절에 없어도 인덱스를 활용하는 새로운 스캔 방식  
+- 인덱스 선두 컬럼의 Distinct Value 개수가 적고, 후행 컬럼 Distinct Value 개수가 많을 때 유용  
+- <img width="361" height="176" alt="image" src="https://github.com/user-attachments/assets/5b4c04b9-90f0-44c4-8da8-8a74e8be5f0c" />  
+### 2.3.5 Index Fast Full Scan  
+- 논리적인 인덱스 트리 구조를 무시하고 인덱스 세그먼트 전체를 Multiblock I/O 방식으로 스캔  
+- 디스크로부터 대량의 인덱스 블록을 읽어야 할 때 효과적  
+### 2.3.6 Index Range Scan Descending  
 - Index Range Scan과 기본적으로 동일하나 차별점은 내림차순으로 정렬된 결과집합을 얻음
-<img width="349" height="170" alt="image" src="https://github.com/user-attachments/assets/92f2f1e9-6e10-49b9-83e4-06b6ddf5aae2" />
-- 인덱스를 거꾸로 읽지 않을 때, index_desc 힌트로 유도
+- <img width="349" height="170" alt="image" src="https://github.com/user-attachments/assets/92f2f1e9-6e10-49b9-83e4-06b6ddf5aae2" />  
+- 인덱스를 거꾸로 읽지 않을 때, index_desc 힌트로 유도  

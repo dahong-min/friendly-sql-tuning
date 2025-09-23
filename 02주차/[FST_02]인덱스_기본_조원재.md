@@ -200,13 +200,32 @@ where 생년월일 = 19951030
   - CHAR ↔ VARCHAR, NCHAR ↔ NVARCHAR 등
 
 ## 2.3 인덱스 확장기능 사용법
+- 인덱스 확장기능
+    1. Index Range Scan
+    2. Index Full Scan
+    3. Index Unique Scan
+    4. Index Skip Scan
+    5. Inex Fast Full Scan
 
 ### 2.3.1 Index Range Scan
-
+- 이전 챕터에서 나왔듯 수직으로 시작점을 찾은 후 수평으로 데이터를 탐색하는 방식
 ### 2.3.2 Index Full Scan
-
+- 수직적 탐색없이 인덱스 리프 블록을 처음부터 끝까지 수평적으로 탐색하는 방식
+- 이 방식은 최적의 인덱스가 없을 때 차선으로 선택된다
+```SQL
+-- index (ename, sal)
+select *
+from emp
+where sal > 2000;
+```
+위 쿼리의 경우 선두 컬럼이 조건절에 없어 Range 탐색이 불가능 하나 sal 컬럼이 인덱스에 걸려있어 Full Scan이 가능하다.
+#### Index Full Scan의 효용성
+- 인덱스 선두컬럼이 없을 때, 옵티마이저는 다음과 같이 실행 계획을 구성한다.
+1. Table Full Scan을 고려
+2. 탐색하고자 하는 테이블이 대용량이면 Full Scan에 대한 부담이 크기에 옵티마이저는 인덱스 활용을 계획한다.
+3. 이때 사용되는 탐색법이 Index Full Scan이다.
 ### 2.3.3 Index Unique Scan
-
+- 수직적 탐색만으로 데이터를 찾는 방식으로 '='조건으로 탐색하는 경우 사용된다.
 ### 2.3.4 Index Skip Scan
 
 복합 인덱스의 선두 컬럼을 조건절에 쓰지 않아도, 인덱스를 활용할 수 있게 해주는 최적화 기법이다.

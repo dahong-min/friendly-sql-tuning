@@ -280,3 +280,11 @@ select * from people where age = 30;
   ### 2.3.6 Index Range Scan Descending
 
   거꾸로 읽는 Index Range Scan
+
+
+## 추가
+| 구분 | 조건식 예시 | 인덱스 사용 여부 | 동작 방식 | 장단점 |
+|------|-------------|------------------|-----------|--------|
+| 1번 (IN) | `history_date IN ('2025-08-01', '2025-08-02', ..., '2025-08-31')` | ✅ 사용함 | 여러 개의 **point lookup** 또는 **index merge**로 분리 실행 | - **장점**: 희소한 날짜 집합(특정일만)일 때 유용<br>- **단점**: 연속된 날짜 범위에는 불필요한 다중 탐색 → 비효율적 |
+| 2번 (BETWEEN) | `history_date BETWEEN '2025-08-01' AND '2025-08-31'` | ✅ 사용함 | 하나의 **range scan**으로 처리 | - **장점**: 단순하고 효율적, 인덱스 최적 활용<br>- **단점**: `DATETIME/TIMESTAMP`에서는 끝날짜 `'2025-08-31 00:00:00'`까지만 잡히는 문제 주의 |
+| 3번 (>= AND <=) | `history_date >= '2025-08-01' AND history_date <= '2025-08-31'` | ✅ 사용함 | 하나의 **range scan**으로 처리 | - **장점**: 2번과 동일, 인덱스 최적 활용<br>- **권장 패턴**: `>= '2025-08-01' AND < '2025-09-01'` (half-open interval)로 쓰면 `DATETIME/TIMESTAMP`에서도 안전 |

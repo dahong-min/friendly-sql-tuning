@@ -38,6 +38,8 @@
   - 효과 : 대량 데이터에서도 평균 (3~4회) 안에 페이지 접근으로 조회 가능
 
 인덱스 탐색 과정은 수직적 탐색과 수평적 탐색으로 나눌 수 있다.
+<img width="1280" height="507" alt="image" src="https://github.com/user-attachments/assets/02b684c5-3524-4d7e-bb7b-92b79f346b22" />
+
 
 - 수직적 탐색 : 인덱스 스캔 시작지점을 찾는 과정
 - 수평적 탐색 : 데이터를 찾는 과정
@@ -55,7 +57,7 @@
 예를 들어 아래와 같은 쿼리가 있다고 할 때, 수직적 탐색은 '2025-08-01' 이상인 첫 번째 레코드 위치를 찾는 것
 
 ```SQL
-select * from orders where order_date >= '2025-08-01';
+select * from orders where order_date >= '2017-05-05';
 ```
 
 ### 2.1.4 인덱스 수평적 탐색
@@ -65,10 +67,10 @@ select * from orders where order_date >= '2025-08-01';
 - 리프 노드에서 옆으로 쭉 읽어 나가며 조건을 만족하는 데이터를 가져오는 과정
 
 ```SQL
-select * from orders where order_date >= '2025-08-01';
+select * from orders where order_date >= '2017-05-05';
 ```
 
-1. 수직적 탐색으로 '2025-08-01'의 위치를 찾았다면, 그 뒤로 '2025-08-02', '2025-08-03', ... 등 범위에 맞는 레코드를 순차적으로 스캔한다.
+1. 수직적 탐색으로 '2017-05-05'의 위치를 찾았다면, 그 뒤로 '2017-05-06', '2017-05-07', ... 등 범위에 맞는 레코드를 순차적으로 스캔한다.
 
 - 리프 노드들은 정렬된 상태로 저장되고, 옆 노드와 Linked List로 이루어져 있다.
 
@@ -272,6 +274,8 @@ select * from people where age = 30;
   |I/O방식|단일 블록, 순차적|멀티블록, 병렬 가능|
   |사용 목적|정렬/범위 검색|빠르게 전체 읽기|
   |속도|느림|빠름|
+
+  > 출처 : https://gkscode.tistory.com/110
 
   ### 2.3.6 Index Range Scan Descending
 

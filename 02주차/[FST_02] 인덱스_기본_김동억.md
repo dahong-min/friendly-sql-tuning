@@ -272,12 +272,52 @@ AND 변경일자 = '20180316'
 
 ### 2.3.1 Index Range Scan
 
+- 인덱스 루트에서 리프 블록까지 수직적으로 탐색한 후 **필요한 범위(Range)만** 스캔
+  - ![](images/dukim/IndexRangeScan.png)
+
 ### 2.3.2 Index Full Scan
+
+- 인덱스 리프 블록을 처음부터 끝까지 **수평적**으로 탐색하는 방식
+  - ![](images/dukim/IndexFullScan.png)
+- 인덱스 선두 컬럼이 조건절에 없으면 옵티마이저는 Table Full Scan 고려
+  - 아주 일부만 테이블에 액세스 하는 상황이라면 옵티마이저는 Index Full Scan 방식 선택
+  - 테이블의 대부분의 로우에 액세스 하는 상황이라면 Table Full Scan이 효율적
 
 ### 2.3.3 Index Unique Scan
 
+- 수직적 탐색만으로 데이터를 찾는 스캔 방식
+  - Unique 인덱스를 '='조건으로 탐색하는 경우에 작동
+  - ![](images/dukim/IndexUniqueScan.png)
+
 ### 2.3.4 Index Skip Scan
+
+- 인덱스 선두 컬럼을 조건절에 사용하지 않으면 옵티마이저는 기본적으로 Table Full Scan을 선택
+  - I/O를 줄이거나 정렬된 결과를 쉽게 얻을수 있다고 판단되면 Index Full Scan을 사용하기도 함
+- 인덱스 선두 컬럼이 조건절에 없어도 인덱스를 활용하는 새로운 스캔 방식
+  - 루트 또는 브랜치 블록에서 읽은 컬럼 값 정보를 이용해 조건절에 부합하는 레코드를 포함할 가능성이 잇는 리프 블록만 액세스하는 스캔 방식
+  - 인덱스 선두 컬럼의 Distinct Value 개수가 적고 후행 컬럼의 Distinct Value 개수가 많을때 유용
+  - 선두 컬럼에 대한 조건절이 있고 중간 컬럼에 대한 조건절이 없는 경우에도 사용 가능
+  - 선두 컬럼이 부동호, BETWEEN, LIKE 같은 범위검색 조건일 때도 사용 가능
+  - `INDEX_SS` 힌트로 설정
+  - ![](images/dukim/IndexSkipScan.png)
 
 ### 2.3.5 Index Fast Full Scan
 
+- Index Fast Full Scan이 Index Full Scan보다 빠른 이유
+  - 논리적인 인덱스 트리 구조 무시
+  - 인덱스 세그먼트 전체를 Multiblock I/O 방식으로 스캔
+  - 인덱스 구조
+    - ![](images/dukim/IndexFullScan원리.png)
+  - Index Fast Full Scan 방식
+    - 물리적 디스크에 저장된 순서대로 읽음
+    - Multiblock I/O 방식
+    - 결과집합이 인덱스 키 순서대로 정렬되지 않음
+    - 사용한 컬럼이 모두 인덱스에 포함돼 있을때만 사용 가능
+    - ![](images/dukim/IndexFastFullScan원리.png)
+
 ### 2.3.6 Index Range Scan Descending
+
+- Index Range SCan과 동일한 스캔 방식
+- 인덱스를 뒤에서부터 앞쪽으로 스캔
+- 내림차순으로 정렬된 결과집합을 얻음
+- ![](images/dukim/IndexRangeScanDescending.png)
